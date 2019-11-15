@@ -13,7 +13,6 @@
 
 <script>
 import Modal from '~/components/molecules/modal'
-import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { LIST } from '~/apollo/queries/books'
 import { CREATED, UPDATED, DELETED } from '~/apollo/subscriptions/books'
 

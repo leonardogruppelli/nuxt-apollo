@@ -1,7 +1,7 @@
 const loader = require('stylus-loader')
 const autoprefixer = require('autoprefixer-stylus')
 const rupture = require('rupture')
-const jeet = require('jeet')
+const jeet = require('jeet');
 
 export default {
   mode: 'universal',

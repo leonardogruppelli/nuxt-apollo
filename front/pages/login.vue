@@ -1,75 +1,33 @@
 <template>
   <div class="container">
-    <div class="load"></div>
     <h1>Login</h1>
-    <ValidationObserver
-      tag="form"
-      ref="observer"
-      v-on:submit.prevent="login"
-    >
-      <ValidationProvider
-        name="e-mail"
-        rules="email|required"
-        v-slot="{ errors }"
-      >
-        <div
-          class="control"
-          :class="
-            errors.length &&
-              'control--error'
-          "
-        >
+    <ValidationObserver ref="observer" tag="form" @submit.prevent="login">
+      <ValidationProvider v-slot="{ classes, errors }" name="e-mail" rules="required|email" slim>
+        <div class="control" :class="classes">
           <label>e-mail</label>
           <div class="control__input">
-            <input
-              type="text"
-              v-model="
-                credentials.email
-              "
-              placeholder="email"
-            />
+            <input v-model="credentials.email" type="text" placeholder="email" />
           </div>
           <span>{{ errors[0] }}</span>
         </div>
       </ValidationProvider>
 
-      <ValidationProvider
-        name="password"
-        rules="required"
-        v-slot="{ errors }"
-      >
-        <div
-          class="control"
-          :class="
-            errors.length &&
-              'control--error'
-          "
-        >
+      <ValidationProvider v-slot="{ classes, errors }" name="password" rules="required" slim>
+        <div class="control" :class="classes">
           <label>e-mail</label>
           <div class="control__input">
-            <input
-              type="password"
-              v-model="
-                credentials.password
-              "
-              placeholder="password"
-            />
+            <input v-model="credentials.password" type="password" placeholder="password" />
           </div>
           <span>{{ errors[0] }}</span>
         </div>
       </ValidationProvider>
-      <button class="btn bg-blue">
-        Login
-      </button>
+      <button class="btn bg-blue">Login</button>
     </ValidationObserver>
   </div>
 </template>
 
 <script>
-import {
-  ValidationObserver,
-  ValidationProvider
-} from 'vee-validate'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { LOGIN } from '~/apollo/mutations/authentication'
 
 export default {
@@ -82,8 +40,7 @@ export default {
       credentials: {
         email: '',
         password: ''
-      },
-      error: ''
+      }
     }
   },
   methods: {
@@ -92,15 +49,10 @@ export default {
 
       if (!valid) return
 
-      const {
-        email,
-        password
-      } = this.credentials
+      const { email, password } = this.credentials
 
       try {
-        const {
-          data
-        } = await this.$apollo.mutate({
+        const { data } = await this.$apollo.mutate({
           mutation: LOGIN,
           variables: {
             email: email,
@@ -108,27 +60,17 @@ export default {
           }
         })
 
-        const token =
-          data.signin &&
-          data.signin.token
+        const token = data.signin && data.signin.token
 
         if (token) {
-          this.error = ''
-
-          await this.$apolloHelpers.onLogin(
-            token
-          )
+          await this.$apolloHelpers.onLogin(token)
 
           this.$router.push({
             path: '/'
           })
-        } else {
-          this.error =
-            'email or password are invalid'
         }
       } catch (error) {
-        this.error =
-          'email or password are invalid'
+        this.error = 'email or password are invalid'
       }
     }
   }
