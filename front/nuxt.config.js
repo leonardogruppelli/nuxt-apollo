@@ -1,7 +1,7 @@
 const loader = require('stylus-loader')
 const autoprefixer = require('autoprefixer-stylus')
 const rupture = require('rupture')
-const jeet = require('jeet');
+const jeet = require('jeet')
 
 export default {
   mode: 'universal',
@@ -9,23 +9,17 @@ export default {
    ** Headers of the page
    */
   head: {
-    title:
-      process.env.npm_package_name ||
-      '',
+    title: process.env.npm_package_name || '',
     meta: [
       { charset: 'utf-8' },
       {
         name: 'viewport',
-        content:
-          'width=device-width, initial-scale=1'
+        content: 'width=device-width, initial-scale=1'
       },
       {
         hid: 'description',
         name: 'description',
-        content:
-          process.env
-            .npm_package_description ||
-          ''
+        content: process.env.npm_package_description || ''
       }
     ],
     link: [
@@ -51,7 +45,20 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ['@nuxtjs/apollo'],
+  modules: [
+    '@nuxtjs/apollo',
+    [
+      'nuxt-fontawesome',
+      {
+        imports: [
+          {
+            set: '@fortawesome/free-solid-svg-icons',
+            icons: ['fas']
+          }
+        ]
+      }
+    ]
+  ],
   /*
    ** Apollo configuration
    */
@@ -66,13 +73,11 @@ export default {
     },
     clientConfigs: {
       default: {
-        httpEndpoint:
-          'http://localhost:4000/graphql',
+        httpEndpoint: 'http://localhost:4000/graphql',
         httpLinkOptions: {
           credentials: 'same-origin'
         },
-        wsEndpoint:
-          'ws://localhost:4000/graphql',
+        wsEndpoint: 'ws://localhost:4000/graphql',
         tokenName: 'token'
       }
     }
@@ -87,17 +92,11 @@ export default {
    ** Build configuration
    */
   build: {
-    transpile: [
-      'vee-validate/dist/rules'
-    ],
+    transpile: ['vee-validate/dist/rules'],
     plugins: [
       new loader.OptionsPlugin({
         default: {
-          use: [
-            autoprefixer(),
-            rupture(),
-            jeet()
-          ]
+          use: [autoprefixer(), rupture(), jeet()]
         }
       })
     ],
