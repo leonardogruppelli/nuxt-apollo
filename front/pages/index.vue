@@ -1,79 +1,48 @@
 <template>
-  <div class="container">
-    <div>
-      <h1 class="title">nuxt-apollo</h1>
-    </div>
-    <Modal></Modal>
-    <ul>
-      <li v-for="book in allBooks" :key="book.id">{{ book.title }}</li>
-    </ul>
-    <button v-on:click="logout">Logout</button>
+  <div>
+    <Cards :cards="cards" />
   </div>
 </template>
 
 <script>
-import Modal from '~/components/molecules/modal'
-import { LIST } from '~/apollo/queries/books'
-import { CREATED, UPDATED, DELETED } from '~/apollo/subscriptions/books'
+import Cards from '~/components/organisms/cards'
 
 export default {
   components: {
-    Modal
+    Cards
   },
-  apollo: {
-    allBooks: {
-      prefetch: true,
-      query: LIST,
-      subscribeToMore: [
+  data() {
+    return {
+      cards: [
         {
-          document: CREATED,
-          updateQuery: (previous, { subscriptionData }) => {
-            return Object.assign({}, previous, {
-              allBooks: [
-                ...previous.allBooks,
-                subscriptionData.data.onCreatedBook
-              ]
-            })
-          }
+          id: 1,
+          icon: 'calendar-o',
+          title: 'books',
+          text: '279',
+          color: 'c-golden'
         },
         {
-          document: UPDATED
+          id: 2,
+          icon: 'bar-chart-o',
+          title: 'things',
+          text: '64',
+          color: 'c-blue'
         },
         {
-          document: DELETED,
-          updateQuery: (previous, { subscriptionData }) => {
-            return Object.assign({}, previous, {
-              allBooks: [
-                ...previous.allBooks.filter(
-                  book => book.id != subscriptionData.data.onDeletedBook.id
-                )
-              ]
-            })
-          }
+          id: 3,
+          icon: 'user-o',
+          title: 'users',
+          text: '13',
+          color: 'c-green'
+        },
+        {
+          id: 4,
+          icon: 'check-o',
+          title: 'contracts',
+          text: '98',
+          color: 'c-purple'
         }
       ]
-    }
-  },
-  methods: {
-    async create() {
-      try {
-        const { data } = await this.$apollo.mutate({
-          mutation: CREATE,
-          variables: {
-            email: email,
-            password: password
-          }
-        })
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    async logout() {
-      await this.$apolloHelpers.onLogout()
-
-      this.$router.push({
-        path: '/login'
-      })
     }
   }
 }

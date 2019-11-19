@@ -41,24 +41,11 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/validate'],
+  plugins: ['~/plugins/validate', '~/plugins/icons'],
   /*
    ** Nuxt.js modules
    */
-  modules: [
-    '@nuxtjs/apollo',
-    [
-      'nuxt-fontawesome',
-      {
-        imports: [
-          {
-            set: '@fortawesome/free-solid-svg-icons',
-            icons: ['fas']
-          }
-        ]
-      }
-    ]
-  ],
+  modules: ['@nuxtjs/apollo'],
   /*
    ** Apollo configuration
    */
@@ -86,7 +73,8 @@ export default {
    ** Router configuration
    */
   router: {
-    middleware: ['authentication']
+    middleware: ['authentication'],
+    linkExactActiveClass: 'active'
   },
   /*
    ** Build configuration

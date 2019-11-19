@@ -1,5 +1,13 @@
 import { configure, extend, localize } from 'vee-validate'
-import { required, email, min, alpha_spaces } from 'vee-validate/dist/rules'
+import {
+  alpha_spaces,
+  between,
+  confirmed,
+  email,
+  max,
+  min,
+  required
+} from 'vee-validate/dist/rules'
 
 export default function() {
   const config = {
@@ -11,10 +19,13 @@ export default function() {
 
   configure(config)
 
-  extend('required', required)
-  extend('email', email)
-  extend('min', min)
   extend('alpha_spaces', alpha_spaces)
+  extend('between', between)
+  extend('confirmed', confirmed)
+  extend('email', email)
+  extend('max', max)
+  extend('min', min)
+  extend('required', required)
 
   localize({
     en: {

@@ -7,6 +7,7 @@ export const LIST = gql`
       title
       ISBN
       publicationDate
+      genre
       writer {
         id
         firstname

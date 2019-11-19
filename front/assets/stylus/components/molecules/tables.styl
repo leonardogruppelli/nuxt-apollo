@@ -1,0 +1,49 @@
+table
+  width 100%
+  background-color $grey
+  text-align left
+  text-transform uppercase
+  overflow hidden
+
+  tbody
+    tr:last-of-type
+      border-bottom 0
+
+  tr
+    border-bottom 1px solid $blue
+
+    th
+    td
+      padding 10px 4%
+      +above(l)
+        padding 15px
+
+      &.id
+        width 10%
+        text-align center
+
+      &.mobile
+        display none
+        +above(l)
+          display table-cell
+
+    th
+      font-size rem(12px)
+      font-weight 500
+      color $golden
+
+    td
+      font-size rem(10px)
+      font-weight 300
+      color $blue
+
+      &.actions
+
+        svg
+          width 15px
+          height 15px
+          margin 0 5px
+          +above(l)
+            width 20px
+            height 20px
+            margin 0 5px

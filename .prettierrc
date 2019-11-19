@@ -1,14 +1,4 @@
 {
   "semi": false,
-  "singleQuote": true,
-  "vue/max-attributes-per-line": [
-    "error",
-    {
-      "singleline": 1,
-      "multiline": {
-        "max": 1,
-        "allowFirstLine": false
-      }
-    }
-  ]
+  "singleQuote": true
 }
