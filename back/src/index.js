@@ -31,8 +31,8 @@ const typeDefs = gql`
 
     type Writer {
         id: ID! 
-        firstname: String!
-        lastname: String!
+        firstname: String
+        lastname: String
         initials: String
         birthday: String
         gender: String
@@ -46,7 +46,7 @@ const typeDefs = gql`
     type Book {
         id: ID!
         title: String!
-        ISBN: Int!
+        isbn: Int
         publicationDate: String!
         genre: Genres
         writer: Writer!
@@ -85,8 +85,8 @@ const typeDefs = gql`
     }
 
     input CreateWriterInput {
-        firstname: String!
-        lastname: String!
+        firstname: String
+        lastname: String
         initials: String
         birthday: String
         gender: String
@@ -110,7 +110,7 @@ const typeDefs = gql`
 
     input CreateBookInput {
         title: String!
-        ISBN: Int!
+        isbn: Int
         publicationDate: String!
         genre: Genres
         writer: CreateBookWriterInput
@@ -124,7 +124,7 @@ const typeDefs = gql`
 
     input UpdateBookInput {
         title: String
-        ISBN: Int
+        isbn: Int
         publicationDate: String
         genre: Genres
     }

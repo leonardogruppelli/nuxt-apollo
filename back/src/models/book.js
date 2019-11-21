@@ -11,7 +11,7 @@ class Book extends Model {
 
 Book.init({
     title: DataTypes.STRING,
-    ISBN: DataTypes.INTEGER,
+    isbn: DataTypes.INTEGER,
     publicationDate: DataTypes.STRING,
     genre: DataTypes.STRING
 }, { sequelize: Sequelize, modelName: 'book' })

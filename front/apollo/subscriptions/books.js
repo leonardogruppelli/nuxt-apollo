@@ -1,16 +1,15 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag'
 
 export const CREATED = gql`
   subscription {
     onCreatedBook {
       id
       title
-      ISBN
+      isbn
       publicationDate
+      genre
       writer {
-        id
         firstname
-        lastname
       }
     }
   }
@@ -21,8 +20,12 @@ export const UPDATED = gql`
     onUpdatedBook {
       id
       title
-      ISBN
+      isbn
       publicationDate
+      genre
+      writer {
+        firstname
+      }
     }
   }
 `

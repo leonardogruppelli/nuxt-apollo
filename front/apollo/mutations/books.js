@@ -1,14 +1,15 @@
 import gql from 'graphql-tag'
 
-export const LIST = gql`
-  query {
-    allBooks {
+export const CREATE = gql`
+  mutation createBook($data: CreateBookInput!) {
+    createBook(data: $data) {
       id
       title
       isbn
       publicationDate
       genre
       writer {
+        id
         firstname
       }
     }

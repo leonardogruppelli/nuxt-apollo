@@ -1,8 +1,8 @@
 <template>
   <div>
+    <Header />
     <Sidebar />
     <Container>
-      <Header />
       <Content>
         <nuxt />
       </Content>

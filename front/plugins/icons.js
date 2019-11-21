@@ -5,7 +5,9 @@ import {
   UserOutline,
   BarChartOutline,
   CalendarOutline,
-  CheckOutline
+  CheckOutline,
+  DeleteOutline,
+  EditOutline
 } from '@ant-design/icons'
 import AntdIcon from '@ant-design/icons-vue'
 
@@ -15,7 +17,9 @@ AntdIcon.add(
   UserOutline,
   BarChartOutline,
   CalendarOutline,
-  CheckOutline
+  CheckOutline,
+  DeleteOutline,
+  EditOutline
 )
 
 Vue.use(AntdIcon)

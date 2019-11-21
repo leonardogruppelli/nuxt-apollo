@@ -1,6 +1,7 @@
 table
   width 100%
-  background-color $grey
+  background-color $black
+  border 1px solid $grey-dark
   text-align left
   text-transform uppercase
   overflow hidden
@@ -10,7 +11,7 @@ table
       border-bottom 0
 
   tr
-    border-bottom 1px solid $blue
+    border-bottom 1px solid $grey-dark
 
     th
     td
@@ -28,14 +29,16 @@ table
           display table-cell
 
     th
+      padding 25px 2%
       font-size rem(12px)
       font-weight 500
-      color $golden
+      color $pink
 
     td
+      padding 20px 2%
       font-size rem(10px)
       font-weight 300
-      color $blue
+      color $green-light
 
       &.actions
 
@@ -46,4 +49,9 @@ table
           +above(l)
             width 20px
             height 20px
-            margin 0 5px
+
+          &.edit
+            color $yellow
+          
+          &.delete
+            color $red

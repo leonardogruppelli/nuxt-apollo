@@ -21,11 +21,7 @@
               <div class="control" :class="classes">
                 <label>e-mail</label>
                 <div class="control__input">
-                  <input
-                    v-model="credentials.email"
-                    type="text"
-                    placeholder="e-mail"
-                  />
+                  <input v-model="credentials.email" type="text" />
                 </div>
                 <span>{{ errors[0] }}</span>
               </div>
@@ -39,11 +35,7 @@
               <div class="control" :class="classes">
                 <label>password</label>
                 <div class="control__input">
-                  <input
-                    v-model="credentials.password"
-                    type="password"
-                    placeholder="password"
-                  />
+                  <input v-model="credentials.password" type="password" />
                 </div>
                 <span>{{ errors[0] }}</span>
               </div>
@@ -53,7 +45,7 @@
               <span>{{ this.error }}</span>
             </div>
 
-            <button class="btn bg-white">Login</button>
+            <button class="btn bg-green">Login</button>
           </ValidationObserver>
         </div>
       </div>

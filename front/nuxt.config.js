@@ -73,8 +73,7 @@ export default {
    ** Router configuration
    */
   router: {
-    middleware: ['authentication'],
-    linkExactActiveClass: 'active'
+    middleware: ['authentication']
   },
   /*
    ** Build configuration

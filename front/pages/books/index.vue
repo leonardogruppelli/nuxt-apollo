@@ -1,5 +1,9 @@
 <template>
   <div>
+    <h1 class="c-green-light">Books</h1>
+    <nuxt-link to="/books/create" class="btn btn--add">
+      Add
+    </nuxt-link>
     <table>
       <thead>
         <tr>
@@ -9,13 +13,16 @@
         </tr>
       </thead>
 
-      <tbody>
+      <transition-group name="table-row" tag="tbody">
         <tr v-for="book in allBooks" :key="book.id">
           <td>{{ book.title }}</td>
           <td>{{ book.genre }}</td>
-          <td>{{ book.genre }}</td>
+          <td class="actions">
+            <AntdIcon type="edit-o" class="edit" />
+            <AntdIcon type="delete-o" class="delete" />
+          </td>
         </tr>
-      </tbody>
+      </transition-group>
     </table>
   </div>
 </template>
