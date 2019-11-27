@@ -1,5 +1,5 @@
 <template>
-  <aside>
+  <aside class="sidebar" :class="sidebar && 'sidebar--active'">
     <ul>
       <li>
         <nuxt-link to="/" :class="route.includes('index') && 'active'">
@@ -21,8 +21,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   computed: {
+    ...mapGetters(['sidebar']),
     route() {
       return this.$nuxt.$route.name
     }

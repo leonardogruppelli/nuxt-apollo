@@ -15,3 +15,21 @@ export const CREATE = gql`
     }
   }
 `
+
+export const UPDATE = gql`
+  mutation createBook($id: ID!, $data: UpdateBookInput!) {
+    updateBook(id: $id, data: $data) {
+      id
+      title
+      isbn
+      publicationDate
+      genre
+    }
+  }
+`
+
+export const DELETE = gql`
+  mutation deleteBook($id: ID!) {
+    deleteBook(id: $id)
+  }
+`

@@ -45,7 +45,7 @@
               <span>{{ this.error }}</span>
             </div>
 
-            <button class="btn bg-green">Login</button>
+            <button class="btn bg-green c-grey-light">Login</button>
           </ValidationObserver>
         </div>
       </div>
@@ -57,6 +57,8 @@
 import Logo from '~/components/atoms/logo'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { LOGIN } from '~/apollo/mutations/authentication'
+import Cookies from 'universal-cookie'
+import { mapActions } from 'vuex'
 
 export default {
   layout: 'authentication',
@@ -75,26 +77,28 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['setUser']),
     async login() {
       const valid = await this.$refs.observer.validate()
 
       if (!valid) return
 
-      const { email, password } = this.credentials
-
       try {
         const { data } = await this.$apollo.mutate({
           mutation: LOGIN,
-          variables: {
-            email: email,
-            password: password
-          }
+          variables: this.credentials
         })
 
         const token = data.signin && data.signin.token
+        const user = data.signin && data.signin.writer
 
         if (token) {
+          const cookies = new Cookies()
+
           await this.$apolloHelpers.onLogin(token)
+
+          cookies.set('user', user)
+          this.setUser(user)
 
           this.$router.push({
             path: '/'
@@ -103,6 +107,7 @@ export default {
           this.error = 'invalid e-mail or password...'
         }
       } catch (error) {
+        console.log(error)
         this.error = 'invalid e-mail or password...'
       }
     }

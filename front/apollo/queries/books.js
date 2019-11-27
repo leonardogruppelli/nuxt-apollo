@@ -14,3 +14,14 @@ export const LIST = gql`
     }
   }
 `
+
+export const GET = gql`
+  query get($id: ID!) {
+    getBook(id: $id) {
+      title
+      isbn
+      publicationDate
+      genre
+    }
+  }
+`

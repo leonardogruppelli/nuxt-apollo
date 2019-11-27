@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ValidationObserver ref="observer" tag="form" @submit.prevent="create">
+    <ValidationObserver ref="observer" tag="form" @submit.prevent="update">
       <ValidationProvider v-slot="{ classes, errors }" rules="required" slim>
         <div class="control" :class="classes">
           <label>title</label>
@@ -31,24 +31,15 @@
         </div>
       </ValidationProvider>
 
-      <ValidationProvider v-slot="{ classes, errors }" rules="required" slim>
-        <div class="control" :class="classes">
-          <label>writer</label>
-          <div class="control__input">
-            <input v-model="form.writer.id" type="text" />
-          </div>
-          <span>{{ errors[0] }}</span>
-        </div>
-      </ValidationProvider>
-
-      <button class="btn bg-green">Add</button>
+      <button class="btn bg-yellow">Update</button>
     </ValidationObserver>
   </div>
 </template>
 
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
-import { CREATE } from '~/apollo/mutations/books'
+import { GET } from '~/apollo/queries/books'
+import { UPDATE } from '~/apollo/mutations/books'
 
 export default {
   components: {
@@ -57,6 +48,7 @@ export default {
   },
   data() {
     return {
+      id: null,
       form: {
         title: '',
         isbn: null,
@@ -67,12 +59,32 @@ export default {
       }
     }
   },
+  apollo: {
+    getBook: {
+      query: GET,
+      prefetch: true,
+      variables() {
+        return {
+          id: this.id
+        }
+      },
+      update(data) {
+        return (this.form = data.getBook)
+      }
+    }
+  },
+  asyncData({ params }) {
+    return {
+      id: params.id
+    }
+  },
   methods: {
-    async create() {
+    async update() {
       try {
         const { data } = await this.$apollo.mutate({
-          mutation: CREATE,
+          mutation: UPDATE,
           variables: {
+            id: this.id,
             data: this.form
           }
         })

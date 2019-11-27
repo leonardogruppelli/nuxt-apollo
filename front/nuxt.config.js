@@ -1,3 +1,5 @@
+import { InMemoryCache } from 'apollo-cache-inmemory'
+
 const loader = require('stylus-loader')
 const autoprefixer = require('autoprefixer-stylus')
 const rupture = require('rupture')
@@ -51,18 +53,18 @@ export default {
    */
   apollo: {
     tokenName: 'token',
-    includeNodeModules: true,
-    defaultOptions: {
-      $query: {
-        loadingKey: 'loading',
-        fetchPolicy: 'cache-and-network'
-      }
+    cookieAttributes: {
+      expires: 1
     },
+    includeNodeModules: true,
     clientConfigs: {
       default: {
         httpEndpoint: 'http://localhost:4000/graphql',
         httpLinkOptions: {
           credentials: 'same-origin'
+        },
+        inMemoryCacheOptions: {
+          addTypename: false
         },
         wsEndpoint: 'ws://localhost:4000/graphql',
         tokenName: 'token'

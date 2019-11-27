@@ -9,131 +9,132 @@ const AuthDirective = require('./directives/auth')
 const pubSub = new PubSub()
 
 const typeDefs = gql`
-    enum RoleEnum {
-        USER
-        WRITER
-    }
+  enum RoleEnum {
+    USER
+    WRITER
+  }
 
-    directive @auth(
-        role: RoleEnum
-    ) on OBJECT | FIELD_DEFINITION
+  directive @auth(role: RoleEnum) on OBJECT | FIELD_DEFINITION
 
-    enum Genres {
-        COMEDY
-        DRAMA
-        FANTASY
-        ACTION
-        ADVENTURE
-        HORROR
-        ROMANCE
-    }
+  enum Genres {
+    COMEDY
+    DRAMA
+    FANTASY
+    ACTION
+    ADVENTURE
+    HORROR
+    ROMANCE
+  }
 
+  type Writer {
+    id: ID!
+    firstname: String
+    lastname: String
+    initials: String
+    birthday: String
+    gender: String
+    phone: String
+    email: String!
+    password: String!
+    role: RoleEnum
+    books: [Book]
+  }
 
-    type Writer {
-        id: ID! 
-        firstname: String
-        lastname: String
-        initials: String
-        birthday: String
-        gender: String
-        phone: String
-        email: String!
-        password: String!
-        role: RoleEnum
-        books: [Book]
-    }
+  type Book {
+    id: ID!
+    title: String!
+    isbn: Int
+    publicationDate: String!
+    genre: Genres
+    writer: Writer!
+  }
 
-    type Book {
-        id: ID!
-        title: String!
-        isbn: Int
-        publicationDate: String!
-        genre: Genres
-        writer: Writer!
-    }
+  type Query {
+    allBooks: [Book]
+    getBook(id: ID!): Book
+    allWriters: [Writer]
+  }
 
-    type Query {
-        allBooks: [Book]
-        allWriters: [Writer]
-    }
+  type Mutation {
+    createBook(data: CreateBookInput): Book @auth(role: WRITER)
+    updateBook(id: ID!, data: UpdateBookInput): Book
+    deleteBook(id: ID!): Boolean
 
-    type Mutation {
-        createBook(data: CreateBookInput): Book @auth(role: WRITER)
-        updateBook(id: ID! data: UpdateBookInput): Book 
-        deleteBook(id: ID!): Boolean 
+    createWriter(data: CreateWriterInput): Writer
+    updateWriter(id: ID!, data: UpdateWriterInput): Writer
+    deleteWriter(id: ID!): Boolean
 
-        createWriter(data: CreateWriterInput): Writer
-        updateWriter(id: ID! data: UpdateWriterInput): Writer 
-        deleteWriter(id: ID!): Boolean 
+    signin(email: String!, password: String!): PayloadAuth
+  }
 
-        signin(
-            email: String!
-            password: String!
-        ): PayloadAuth
-    }
+  type PayloadAuth {
+    token: String!
+    writer: Writer!
+  }
 
-    type PayloadAuth {
-        token: String!
-        writer: Writer!
-    }
+  type Subscription {
+    onCreatedWriter: Writer
+    onCreatedBook: Book
+    onUpdatedBook: Book
+    onDeletedBook: Book
+  }
 
-    type Subscription {
-        onCreatedWriter: Writer
-        onCreatedBook: Book
-        onUpdatedBook: Book
-        onDeletedBook: Book
-    }
+  input CreateWriterInput {
+    firstname: String
+    lastname: String
+    initials: String
+    birthday: String
+    gender: String
+    phone: String
+    email: String!
+    password: String!
+    role: RoleEnum!
+  }
 
-    input CreateWriterInput {
-        firstname: String
-        lastname: String
-        initials: String
-        birthday: String
-        gender: String
-        phone: String
-        email: String!
-        password: String!
-        role: RoleEnum!
-    }
+  input UpdateWriterInput {
+    firstname: String
+    lastname: String
+    initials: String
+    birthday: String
+    gender: String
+    phone: String
+    email: String
+    password: String
+    role: RoleEnum
+  }
 
-    input UpdateWriterInput {
-        firstname: String
-        lastname: String
-        initials: String
-        birthday: String
-        gender: String
-        phone: String
-        email: String
-        password: String
-        role: RoleEnum
-    }
+  input CreateBookInput {
+    title: String!
+    isbn: Int
+    publicationDate: String!
+    genre: Genres
+    writer: CreateBookWriterInput
+  }
 
-    input CreateBookInput {
-        title: String!
-        isbn: Int
-        publicationDate: String!
-        genre: Genres
-        writer: CreateBookWriterInput
-    }
+  input CreateBookWriterInput {
+    firstname: String
+    lastname: String
+    id: ID
+  }
 
-    input CreateBookWriterInput {
-        firstname: String
-        lastname: String
-        id: ID
-    }
-
-    input UpdateBookInput {
-        title: String
-        isbn: Int
-        publicationDate: String
-        genre: Genres
-    }
+  input UpdateBookInput {
+    title: String
+    isbn: Int
+    publicationDate: String
+    genre: Genres
+  }
 `
 
 const resolver = {
   Query: {
     allBooks() {
       return Book.findAll({ include: [Writer] })
+    },
+    getBook(parent, body, context, info) {
+      return Book.findOne({
+        where: { id: body.id },
+        include: [Writer]
+      })
     },
     allWriters() {
       return Writer.findAll({ include: [Book] })
@@ -142,10 +143,9 @@ const resolver = {
   Mutation: {
     async createBook(parent, body, context, info) {
       if (body.data.writer) {
-        const [createdWriter, created] =
-          await Writer.findOrCreate(
-            { where: body.data.writer }
-          )
+        const [createdWriter, created] = await Writer.findOrCreate({
+          where: body.data.writer
+        })
         body.data.writer = null
         const book = await Book.create(body.data)
         await book.setWriter(createdWriter.get('id'))
@@ -154,7 +154,6 @@ const resolver = {
           onCreatedBook: newBook
         })
         return newBook
-
       } else {
         const book = await Book.create(body.data, { include: [Writer] })
         pubSub.publish('createdBook', {
@@ -221,10 +220,7 @@ const resolver = {
       })
 
       if (writer) {
-        const isCorrect = await bcrypt.compare(
-          body.password,
-          writer.password
-        )
+        const isCorrect = await bcrypt.compare(body.password, writer.password)
         if (!isCorrect) {
           throw new Error('Senha inválida')
         }
@@ -273,12 +269,10 @@ const server = new ApolloServer({
       headers: req.headers
     }
   }
-});
-
+})
 
 Sequelize.sync().then(() => {
-  server.listen()
-    .then(() => {
-      console.log('Servidor rodando')
-    })
+  server.listen().then(() => {
+    console.log('Servidor rodando')
+  })
 })

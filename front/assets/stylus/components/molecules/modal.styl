@@ -1,0 +1,58 @@
+.modal
+  display table-cell
+
+  &__wrapper
+    width 100vw
+    height 100vh
+    display table
+    position fixed
+    top 0
+    left 0
+    background-color rgba($black-light, 0.6)
+
+  &__content
+    width 90%
+    max-width 800px
+    max-height 90%
+    margin auto
+    background-color $black
+    border 1px solid $grey-dark
+
+  &__header
+    position relative
+    padding 8%
+    border-bottom 1px solid $grey-dark
+    +above(m)
+      padding 4%
+
+    h2
+      padding-right calc(8% + 25px)
+      font-size rem(24px)
+      color $green-light
+      text-transform uppercase
+      +above(m)
+        padding-right calc(4% + 30px)
+
+  &__body
+    padding 8%
+    overflow auto
+    +above(m)
+      padding 4%
+
+  &__close
+    position absolute
+    top 50%
+    right 8%
+    font-size 0
+    transform translateY(-50%)
+    cursor pointer
+    +above(m)
+      right 4%
+
+    svg
+      width 25px
+      height 25px
+      color $red
+      +above(m)
+        width 30px
+        height 30px
