@@ -75,7 +75,7 @@ export default {
    ** Router configuration
    */
   router: {
-    middleware: ['authentication']
+    middleware: ['index']
   },
   /*
    ** Build configuration

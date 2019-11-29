@@ -4,7 +4,7 @@
     :class="sidebar && 'sidebar-button--active'"
     @click="setSidebar"
   >
-    Toggle Sidebar <AntdIcon type="left-circle-o" />
+    Toggle Sidebar <AntdIcon type="right-circle-o" />
   </button>
 </template>
 

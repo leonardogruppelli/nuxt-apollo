@@ -1,43 +1,41 @@
 <template>
   <div>
     <h1 class="c-green-light">Books</h1>
-    <button class="btn btn--icon c-blue" @click="modal.create = !modal.create">
+    <button class="btn btn--table c-blue" @click="modal.create = true">
       <AntdIcon type="plus-o" />
     </button>
-    <table>
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Genre</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
+    <div class="table__wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
 
-      <transition-group name="table-row" tag="tbody">
-        <tr v-for="book in allBooks" :key="book.id">
-          <td>{{ book.title }}</td>
-          <td>{{ book.genre }}</td>
-          <td class="actions">
-            <nuxt-link
-              :to="{ name: 'books-update-id', params: { id: book.id } }"
-            >
-              <AntdIcon type="edit-o" class="edit" />
-            </nuxt-link>
-            <AntdIcon
-              type="delete-o"
-              class="delete"
-              @click.native="remove(book.id)"
-            />
-          </td>
-        </tr>
-      </transition-group>
-    </table>
+        <transition-group name="table-row" tag="tbody">
+          <tr v-for="book in books" :key="book.id">
+            <td>{{ book.title }}</td>
+            <td>{{ book.genre }}</td>
+            <td class="actions">
+              <AntdIcon
+                type="edit-o"
+                class="edit"
+                @click.native="update(book.id)"
+              />
+              <AntdIcon
+                type="delete-o"
+                class="delete"
+                @click.native="remove(book.id)"
+              />
+            </td>
+          </tr>
+        </transition-group>
+      </table>
+    </div>
 
-    <Modal
-      v-if="modal.create"
-      title="Create Book"
-      @close=";[(modal.create = false), clear(form.create)]"
-    >
+    <Modal v-if="modal.create" title="Create Book" @close="close('create')">
       <div>
         <ValidationObserver ref="create" tag="form" @submit.prevent="create">
           <ValidationProvider
@@ -100,6 +98,70 @@
         </ValidationObserver>
       </div>
     </Modal>
+
+    <Modal v-if="modal.update" title="Update Book" @close="close('update')">
+      <div>
+        <ValidationObserver ref="update" tag="form" @submit.prevent="update">
+          <ValidationProvider
+            v-slot="{ classes, errors }"
+            rules="required"
+            slim
+          >
+            <div class="control" :class="classes">
+              <label>title</label>
+              <div class="control__input">
+                <input v-model="form.update.title" type="text" />
+              </div>
+              <span>{{ errors[0] }}</span>
+            </div>
+          </ValidationProvider>
+
+          <ValidationProvider
+            v-slot="{ classes, errors }"
+            rules="required"
+            slim
+          >
+            <div class="control" :class="classes">
+              <label>isbn</label>
+              <div class="control__input">
+                <input v-model.number="form.update.isbn" type="number" />
+              </div>
+              <span>{{ errors[0] }}</span>
+            </div>
+          </ValidationProvider>
+
+          <ValidationProvider
+            v-slot="{ classes, errors }"
+            rules="required"
+            slim
+          >
+            <div class="control" :class="classes">
+              <label>publication date</label>
+              <div class="control__input">
+                <input v-model="form.update.publicationDate" type="text" />
+              </div>
+              <span>{{ errors[0] }}</span>
+            </div>
+          </ValidationProvider>
+
+          <ValidationProvider
+            v-slot="{ classes, errors }"
+            rules="required"
+            slim
+          >
+            <div class="control" :class="classes">
+              <label>writer</label>
+              <div class="control__input">
+                <input v-model="form.update.writer.id" type="text" />
+              </div>
+              <span>{{ errors[0] }}</span>
+            </div>
+          </ValidationProvider>
+
+          <button class="btn bg-golden">Update</button>
+        </ValidationObserver>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -119,8 +181,17 @@ export default {
   },
   data() {
     return {
+      id: null,
       form: {
         create: {
+          title: null,
+          isbn: null,
+          publicationDate: null,
+          writer: {
+            id: null
+          }
+        },
+        update: {
           title: null,
           isbn: null,
           publicationDate: null,
@@ -133,6 +204,11 @@ export default {
         create: false,
         update: false
       }
+    }
+  },
+  computed: {
+    books() {
+      return this.allBooks
     }
   },
   apollo: {
@@ -172,7 +248,7 @@ export default {
   mixins: [clear],
   methods: {
     async create() {
-      const valid = await this.$refs.observer.validate()
+      const valid = await this.$refs.create.validate()
 
       if (!valid) return
 
@@ -185,7 +261,37 @@ export default {
         })
 
         if (data) {
-          alert('success')
+          this.close('create')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async update(id = false) {
+      if (id) {
+        this.id = id
+
+        const book = this.books.find(book => {
+          return book.id == id
+        })
+
+        this.form.update = book
+        this.modal.update = true
+
+        return
+      }
+
+      try {
+        const { data } = await this.$apollo.mutate({
+          mutation: UPDATE,
+          variables: {
+            id: this.id,
+            data: this.form.update
+          }
+        })
+
+        if (data) {
+          this.close('update')
         }
       } catch (error) {
         console.log(error)
@@ -202,6 +308,10 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    close(modal) {
+      this.modal[modal] = false
+      this.clear(this.form[modal])
     }
   }
 }

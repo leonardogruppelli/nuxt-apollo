@@ -11,6 +11,9 @@ export const mutations = {
   },
   SET_SIDEBAR(state) {
     state.sidebar = !state.sidebar
+  },
+  CLOSE(state) {
+    state.sidebar = false
   }
 }
 
@@ -26,6 +29,9 @@ export const actions = {
   },
   setSidebar({ commit }) {
     commit('SET_SIDEBAR')
+  },
+  close({ commit }) {
+    commit('CLOSE')
   }
 }
 

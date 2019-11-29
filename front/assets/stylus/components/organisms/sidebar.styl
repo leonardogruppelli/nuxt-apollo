@@ -1,6 +1,6 @@
 .sidebar
-  width 80px
   height calc(100vh - 60px)
+  display none
   position absolute
   top 60px
   left 0
@@ -11,17 +11,24 @@
     height calc(100vh - 70px)
     top 70px
 
+  &--active
+    display block
+
   ul
     width 100%
     height 100%
 
     li
-      text-align center
+      text-align left
+      white-space nowrap
+      +above(l)
+        text-align center
 
       a
         display block
         position relative
-        padding 20% 0
+        padding 20px
+        color $green
 
         &:before
           content ''
@@ -36,16 +43,28 @@
         svg
           width 25px
           height auto
-          color $green
           +above(l)
             width 35px
+
+        span
+          display inline-block
+          @extend .montserrat
+          font-size rem(14px)
+          text-transform uppercase
+          +above(l)
+            display none
+
+          &:before
+            content ''
+            width 1px
+            height 100%
+            margin 0 20px
+            border-left 1px solid
 
         &.active
         &:hover
           background-color $black-light
-
-          svg
-            color $green-light
+          color $green-light
 
         &.active:before
           display block
