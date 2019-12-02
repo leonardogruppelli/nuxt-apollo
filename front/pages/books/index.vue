@@ -94,7 +94,7 @@
             </div>
           </ValidationProvider>
 
-          <button class="btn bg-green">Add</button>
+          <button class="btn c-blue">Add</button>
         </ValidationObserver>
       </div>
     </Modal>
@@ -144,21 +144,7 @@
             </div>
           </ValidationProvider>
 
-          <ValidationProvider
-            v-slot="{ classes, errors }"
-            rules="required"
-            slim
-          >
-            <div class="control" :class="classes">
-              <label>writer</label>
-              <div class="control__input">
-                <input v-model="form.update.writer.id" type="text" />
-              </div>
-              <span>{{ errors[0] }}</span>
-            </div>
-          </ValidationProvider>
-
-          <button class="btn bg-golden">Update</button>
+          <button class="btn c-golden">Update</button>
         </ValidationObserver>
       </div>
     </Modal>
@@ -194,10 +180,7 @@ export default {
         update: {
           title: null,
           isbn: null,
-          publicationDate: null,
-          writer: {
-            id: null
-          }
+          publicationDate: null
         }
       },
       modal: {
@@ -219,27 +202,43 @@ export default {
         {
           document: CREATED,
           updateQuery: (previous, { subscriptionData }) => {
-            return Object.assign({}, previous, {
-              allBooks: [
-                ...previous.allBooks,
-                subscriptionData.data.onCreatedBook
-              ]
-            })
+            let result = {
+              allBooks: [...previous.allBooks]
+            }
+
+            result.allBooks.push(subscriptionData.data.onCreatedBook)
+
+            return result
           }
         },
         {
-          document: UPDATED
+          document: UPDATED,
+          updateQuery: (previous, { subscriptionData }) => {
+            let result = {
+              allBooks: [...previous.allBooks]
+            }
+
+            result.allBooks[
+              result.allBooks.findIndex(
+                book => book.id == subscriptionData.data.onUpdatedBook.id
+              )
+            ] = subscriptionData.data.onUpdatedBook
+
+            return result
+          }
         },
         {
           document: DELETED,
           updateQuery: (previous, { subscriptionData }) => {
-            return Object.assign({}, previous, {
-              allBooks: [
-                ...previous.allBooks.filter(
-                  book => book.id != subscriptionData.data.onDeletedBook.id
-                )
-              ]
-            })
+            let result = {
+              allBooks: [...previous.allBooks]
+            }
+
+            result.allBooks = result.allBooks.filter(
+              book => book.id != subscriptionData.data.onDeletedBook.id
+            )
+
+            return result
           }
         }
       ]
@@ -267,19 +266,30 @@ export default {
         console.log(error)
       }
     },
-    async update(id = false) {
-      if (id) {
+    async update(id) {
+      if (id % 1 == 0) {
         this.id = id
 
-        const book = this.books.find(book => {
-          return book.id == id
-        })
+        try {
+          const book = this.books.find(book => {
+            return book.id == id
+          })
 
-        this.form.update = book
-        this.modal.update = true
+          Object.keys(book).forEach(key =>
+            key in this.form.update ? (this.form.update[key] = book[key]) : null
+          )
+
+          this.modal.update = true
+        } catch (error) {
+          console.log(error)
+        }
 
         return
       }
+
+      const valid = await this.$refs.update.validate()
+
+      if (!valid) return
 
       try {
         const { data } = await this.$apollo.mutate({

@@ -11,7 +11,7 @@ export default {
    ** Headers of the page
    */
   head: {
-    title: process.env.npm_package_name || '',
+    title: 'Nuxt.js and Apollo',
     meta: [
       { charset: 'utf-8' },
       {

@@ -45,7 +45,7 @@
               <span>{{ this.error }}</span>
             </div>
 
-            <button class="btn bg-green c-grey-light">Login</button>
+            <button class="btn c-green-light">Login</button>
           </ValidationObserver>
         </div>
       </div>

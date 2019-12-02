@@ -17,13 +17,17 @@ export const CREATE = gql`
 `
 
 export const UPDATE = gql`
-  mutation createBook($id: ID!, $data: UpdateBookInput!) {
+  mutation updateBook($id: ID!, $data: UpdateBookInput!) {
     updateBook(id: $id, data: $data) {
       id
       title
       isbn
       publicationDate
       genre
+      writer {
+        id
+        firstname
+      }
     }
   }
 `

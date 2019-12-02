@@ -46,7 +46,7 @@ const typeDefs = gql`
     isbn: Int
     publicationDate: String!
     genre: Genres
-    writer: Writer!
+    writer: Writer
   }
 
   type Query {
