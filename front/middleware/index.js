@@ -1,13 +1,15 @@
 import Cookies from 'universal-cookie'
 
 export default function({ app, req, store, route, redirect }) {
-  const token = app.$apolloHelpers.getToken()
   const cookies = new Cookies(req && req.headers.cookie)
+  const token = app.$apolloHelpers.getToken()
+  const user = cookies.get('user')
 
   store.dispatch('close')
 
-  if (!token) {
-    cookies.remove('user')
+  if (!token || !user) {
+    app.$apolloHelpers.onLogout()
+    return
   }
 
   if (!token && route.name != 'authentication') {

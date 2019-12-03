@@ -10,6 +10,9 @@
   color inherit
   box-sizing border-box
 
+::placeholder
+  color $grey-light
+
 article
 aside
 details
@@ -43,7 +46,8 @@ a
   text-decoration none
 
 ol
-ul 
+ul
+  clearfix()
   list-style none
 
 blockquote
@@ -66,5 +70,6 @@ table
   border-collapse collapse
   border-spacing 0
 
-::placeholder
-  color $grey-light
+canvas
+  width 100% !important
+  height auto !important

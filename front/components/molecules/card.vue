@@ -4,7 +4,7 @@
       <AntdIcon :type="icon" />
     </div>
     <div class="card__content">
-      <h1>{{ title }}</h1>
+      <p>{{ title }}</p>
       <span>{{ text }}</span>
     </div>
   </div>
